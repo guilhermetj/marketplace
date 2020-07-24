@@ -41,3 +41,20 @@ Route::get('/model', function (){
 //     ]);
     return \App\User::all();
 });
+
+
+
+
+Route::prefix('admin')->namespace('Admin')->group(function (){
+
+    Route::prefix('stores')->group(function (){
+        Route::get('/create', 'StoreController@create')->name('stores.create');
+        Route::post('/update/{store}', 'StoreController@update')->name('stores.update');
+        Route::post('/store', 'StoreController@store')->name('stores.store');
+        Route::get('/{store}/edit', 'StoreController@edit')->name('stores.edit');
+        Route::get('/destroy/{store}', 'StoreController@destroy')->name('stores.destroy');
+        Route::get('/', 'StoreController@index')->name('stores.index');
+
+    });
+
+});
