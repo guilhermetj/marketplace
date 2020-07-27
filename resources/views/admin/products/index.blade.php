@@ -2,24 +2,28 @@
 
 @section('content')
     @include('layouts.alerts')
-    <a href="{{ route('stores.create') }}" class="btn btn-success">Cadastrar</a>
+    <a href="{{ route('products.create') }}" class="btn btn-success">Cadastrar</a>
     <table class="table table-striped">
         <thead>
         <tr>
             <th>#</th>
+            <th>Nome</th>
             <th>Loja</th>
+            <th>Preço</th>
             <th>Ações</th>
         </tr>
         </thead>
         <tbody>
-        @foreach($stores as $store)
+        @foreach($products as $p)
             <tr>
-                <th>{{$store->id}}</th>
-                <th>{{$store->name}}</th>
+                <th>{{$p->id}}</th>
+                <th>{{$p->name}}</th>
+                <th>{{$p->store->name}}</th>
+                <th>R$ {{ number_format($p->price, 2, ',','.') }}</th>
                 <th>
                     <div class="btn-group">
-                        <a href="{{ route('stores.edit', $store->id) }}" class="btn btn-primary">Editar</a>
-                        <form action="{{ route('stores.destroy', $store->id) }}" method="post">
+                        <a href="{{ route('products.edit', $p->id) }}" class="btn btn-primary">Editar</a>
+                        <form action="{{ route('products.destroy', $p->id) }}" method="post">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger" type="submit" >Remover</button>
@@ -30,5 +34,5 @@
         @endforeach
         </tbody>
     </table>
-    {{$stores->links()}}
+    {{$products->links()}}
 @endsection
