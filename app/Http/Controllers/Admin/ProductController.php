@@ -22,6 +22,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+        
         $products = $this->product->paginate(10);
         return view('admin.products.index', compact('products'));
     }
@@ -48,7 +49,8 @@ class ProductController extends Controller
     {
         $data = $request->all();
 
-        $store = \App\Store::find($data['store']);
+        $store = auth()->user()->store;
+
         $store->products()->create($data);
 
         return redirect()
