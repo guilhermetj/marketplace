@@ -16,7 +16,7 @@ Route::get('/', function () {
     $helloWorld = 'Hello World';
 
     return view('welcome', compact('helloWorld'));
-});
+})->name('home');
 
 Route::get('/model', function (){
 // active record
@@ -45,24 +45,26 @@ Route::get('/model', function (){
 
 
 
-Route::prefix('admin')->namespace('Admin')->group(function (){
+Route::group(['middleware' => ['auth']], function(){
 
-//    Route::prefix('stores')->group(function (){
-//        Route::get('/create', 'StoreController@create')->name('stores.create');
-//        Route::post('/update/{store}', 'StoreController@update')->name('stores.update');
-//        Route::post('/store', 'StoreController@store')->name('stores.store');
-//        Route::get('/{store}/edit', 'StoreController@edit')->name('stores.edit');
-//        Route::get('/destroy/{store}', 'StoreController@destroy')->name('stores.destroy');
-//        Route::get('/', 'StoreController@index')->name('stores.index');
-//
-//    });
-    Route::resource('stores', 'StoreController');
-    Route::resource('products', 'ProductController');
+    Route::prefix('admin')->namespace('Admin')->group(function (){
 
+        //    Route::prefix('stores')->group(function (){
+        //        Route::get('/create', 'StoreController@create')->name('stores.create');
+        //        Route::post('/update/{store}', 'StoreController@update')->name('stores.update');
+        //        Route::post('/store', 'StoreController@store')->name('stores.store');
+        //        Route::get('/{store}/edit', 'StoreController@edit')->name('stores.edit');
+        //        Route::get('/destroy/{store}', 'StoreController@destroy')->name('stores.destroy');
+        //        Route::get('/', 'StoreController@index')->name('stores.index');
+        //
+        //    });
+            Route::resource('stores', 'StoreController');
+            Route::resource('products', 'ProductController');
+        
+        });
 });
-
 
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
