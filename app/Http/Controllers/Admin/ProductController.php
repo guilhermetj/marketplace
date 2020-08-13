@@ -56,6 +56,12 @@ class ProductController extends Controller
 
         $product->categories()->sync($data['categories']);
 
+        if($request->hasFile('photos')) {
+            $images = $this->imageUpload($request, 'image');
+            // insercão destas imagens na base
+            $product->photos()->createMany($images);
+        }
+
         return redirect()
             ->route('products.index')
             ->with('message', 'Produto adicionado com sucesso');
@@ -121,5 +127,14 @@ class ProductController extends Controller
         return redirect()
             ->route('products.index')
             ->with('message', 'Removido com sucesso');
+    }
+    private function imageUpload(Request $request, $imageColumn){
+
+        $images = $request->file('photos');
+        $uploadedImages = [];
+        foreach($images as $image){
+            $uploadedImages[] = [$imageColumn => $image->store('products','public')];
+         }
+        return $uploadedImages;
     }
 }

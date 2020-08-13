@@ -4,7 +4,7 @@
 @section('content')
     <h1>Atualizar Produto</h1>
 
-    <form action="{{route('products.update', ['product' => $products->id])}}" method="post">
+    <form action="{{route('products.update', ['product' => $products->id])}}" method="post" enctype="multipart/form-data">
         @csrf
         @method("PUT")
 
@@ -64,7 +64,10 @@
                 @endforeach
             </select>
         </div>
-
+        <div class="form-group">
+                <label>Fotos do produto</label>
+                <input type="file" name="photos[]"class="form-control" multiple>
+        </div>
         <div class="form-group">
             <label>Slug</label>
             <input type="text" name="slug" class="form-control" value="{{$products->slug}}">
