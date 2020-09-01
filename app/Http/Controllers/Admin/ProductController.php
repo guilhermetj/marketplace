@@ -7,11 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
+use App\Traits\UploadTrait;
 
 class ProductController extends Controller
 {
+    use UploadTrait;
+
     public  function __construct(Product $product)
-    {  
+    {
             $this->product = $product;
     }
 
@@ -49,15 +52,16 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $data = $request->all();
+        $categories = $request->get('categories', null);
 
         $store = auth()->user()->store;
 
         $product = $store->products()->create($data);
 
-        $product->categories()->sync($data['categories']);
+        $product->categories()->sync($categories);
 
         if($request->hasFile('photos')) {
-            $images = $this->imageUpload($request, 'image');
+            $images = $this->imageUpload($request->file('photos'), 'image');
             // insercão destas imagens na base
             $product->photos()->createMany($images);
         }
@@ -102,11 +106,18 @@ class ProductController extends Controller
     public function update(ProductRequest $request, $product)
     {
         $data = $request->all();
-
+        $categories = $request->get('categories', null);
 
         $product = $this->product->find($product);
         $product->update($data);
-        $product->categories()->sync($data['categories']);
+        if(!is_null($categories))
+            $product->categories()->sync($categories);
+
+        if($request->hasFile('photos')) {
+            $images = $this->imageUpload($request->file('photos'), 'image');
+            // insercão destas imagens na base
+            $product->photos()->createMany($images);
+        }
 
         return redirect()
             ->route('products.index')
@@ -128,13 +139,5 @@ class ProductController extends Controller
             ->route('products.index')
             ->with('message', 'Removido com sucesso');
     }
-    private function imageUpload(Request $request, $imageColumn){
 
-        $images = $request->file('photos');
-        $uploadedImages = [];
-        foreach($images as $image){
-            $uploadedImages[] = [$imageColumn => $image->store('products','public')];
-         }
-        return $uploadedImages;
-    }
 }

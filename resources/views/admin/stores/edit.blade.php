@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Criar Loja</h1>
-    <form action="{{ route('stores.update', $store->id) }}" method="post">
+    <form action="{{ route('stores.update', $store->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -22,8 +22,16 @@
             <input type="text" name="mobile_phone" class="form-control" value="{{$store->mobile_phone}}">
         </div>
         <div class="form-group">
-            <label >Slug</label>
-            <input type="text" name="slug" class="form-control" value="{{$store->slug}}">
+            <p>
+                <img src="{{asset('storage/' . $store->logo)}}" alt="" style="width: 300px;">
+            </p>
+            <label>Fotos do produto</label>
+            <input type="file" name="logo"class="form-control @error('logo') is-invalid @enderror">
+            @error('logo')
+            <div class="invalid-feedback">
+                {{$message}}
+            </div>
+            @enderror
         </div>
         <div class="form-group">
             <button type="submit"  class="btn btn-success" >Enviar</button>

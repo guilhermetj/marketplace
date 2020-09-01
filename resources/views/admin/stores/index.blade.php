@@ -4,7 +4,7 @@
     @include('layouts.alerts')
     @if(!$store)
         <a href="{{ route('stores.create') }}" class="btn btn-success">Cadastrar</a>
-    @endif
+    @else
     <table class="table table-striped">
         <thead>
         <tr>
@@ -32,4 +32,5 @@
             </tr>
         </tbody>
     </table>
+    @endif
 @endsection
